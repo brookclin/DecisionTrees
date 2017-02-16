@@ -1,6 +1,3 @@
-# Chun Lin lin819@usc.edu
-# Haoyu Jiang haoyujia@usc.edu
-
 from math import log
 import csv
 
