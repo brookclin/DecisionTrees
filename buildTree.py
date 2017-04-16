@@ -14,6 +14,7 @@ def calcEntropy(dataset):
         sumResult += float(resultCount[key])/lenSet * log(lenSet/float(resultCount[key]),2)
     return sumResult
 
+
 def divideDs(dataset, attr):
     resultSets = {}
     for line in dataset:
@@ -22,6 +23,7 @@ def divideDs(dataset, attr):
         resultSets[line[attr]].append(line)
     return resultSets
 
+
 def majorityResult(dataset):
     resultCount = {}
     for line in dataset:
@@ -29,6 +31,7 @@ def majorityResult(dataset):
             resultCount[line[-1]] = 0
         resultCount[line[-1]] += 1
     return max(resultCount, key=lambda i: resultCount[i])
+
 
 def constructTree(dataset, attrDict, lastEntropy):
     # Terminate condition: unanimous or run out of attributes
@@ -66,6 +69,7 @@ def constructTree(dataset, attrDict, lastEntropy):
 
     return resDict
 
+
 def outputTree(treeDict, attrResultDict, level, levelDict):
     # Terminate condition: input treedict is not a dict
     if isinstance(treeDict, dict):
@@ -84,6 +88,18 @@ def outputTree(treeDict, attrResultDict, level, levelDict):
         else:
             levelDict[nextlevel].append('Tie')
 
+
+def outputDFS(treeDict, level):
+    currentAttr = treeDict.keys()[0]
+    for result in treeDict[currentAttr].keys():
+        currentFetch = treeDict[currentAttr][result]
+        if not isinstance(currentFetch, dict):
+            print "|  " * level + currentAttr + " = " + result + ": " + currentFetch
+        else:
+            print "|  " * level + currentAttr + " = " + result
+            outputDFS(currentFetch, level+1)
+
+
 def makePrediction(prediction, resultDict):
     if not isinstance(resultDict, dict):
         print resultDict
@@ -101,7 +117,7 @@ originalDataset = list(reader)
 f.close()
 firstEntropy = calcEntropy(originalDataset)
 treeResult = constructTree(originalDataset, attrDict, firstEntropy)
-# print treeResult
+print treeResult
 
 attrResult = {'Size': ['Large','Medium','Small'],
               'Occupied': ['High', 'Moderate', 'Low'],
@@ -124,3 +140,4 @@ prediction = {'Size': 'Large',
               'FavoriteBeer': 'No'}
 
 makePrediction(prediction, treeResult)
+outputDFS(treeResult, 0)
